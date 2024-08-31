@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Volume Search</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <h1 class="text-4xl font-bold text-center mb-4 mt-10">Welcome.</h1>
+    <h1 class="text-4xl font-bold text-center mb-4">Search an exchange to find stocks with unusual volume.</h1>
+
+    <div class="p-4 flex flex-col items-center justify-center">
+        <div class="tab-content flex items-center justify-center">
+            <div class="flex items-center justify-center">
+                <div class="bg-white rounded-lg shadow-md p-8 w-96 mb-10">
+                    <h1 class="text-2xl font-semibold mb-4 text-center">Volume Search <img
+                            class="inline-block align-middle" src="../static/cadflag.jpg" alt="cadflag" height="20px"
+                            width="35px">
+                    </h1>
+                    <form id="search-form" method="get">
+                        <div class="justify-center text-center mb-5">
+                            <label>
+                                <input type="radio" name="exchange" value="cse" checked> CSE
+                            </label>
+                            <label>
+                                <input type="radio" name="exchange" value="tsx"> TSX
+                            </label>
+                            <label>
+                                <input type="radio" name="exchange" value="tsxv"> TSX-V
+                            </label>
+                        </div>
+                        <button id="searchButton" type="button" onclick="inputClick()"
+                            class="bg-gray-800 text-white p-2 w-full rounded-md hover:bg-gray-600">Search</button>
+                        <span class="justify-center text-center" id="errorInfo"></span><br>
+                    </form>
+                    <span class="justify-center text-center" id="infoText"></span>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center items-center mb-5">
+            <div id="loading-spinner"
+                class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin">
+            </div>
+        </div>
+        <div class="flex justify-center items-center mb-5">
+            <p id="loading-messageOne">Loading</p>
+        </div>
+        <div class="flex justify-center items-center">
+            <p id="loading-messageTwo">Scanning thousands of stocks so may take a few minutes.</p>
+        </div>
+        <div class="justify-center">
+            <h1 class="text-2xl font-semibold mb-2 text-center">List of Stocks With Unusual Volume</h1>
+        </div>
+        <div class="bg-gray-100 flex items-center justify-center p-2 mb-10">
+            <div class="flex flex-col items-center">
+                <textarea id="info" rows="10" cols="75" disabled></textarea>
+                <script>
+                    function inputClick() {
+                        document.getElementById("errorInfo").innerHTML = "Search has been turned off so my IP doesn't send too many api requests."
+                        document.getElementById("infoText").innerHTML = "This typically works by scanning all stocks on a given exchange and comparing the volume of the day to the average daily volume."
+                    }
+                    function showLoadingSpinner() {
+                        document.getElementById('loading-spinner').classList.remove('hidden');
+                        document.getElementById('loading-messageOne').classList.remove('hidden');
+                        document.getElementById('loading-messageTwo').classList.remove('hidden');
+
+                    }
+
+                    function hideLoadingSpinner() {
+                        document.getElementById('loading-spinner').classList.add('hidden');
+                        document.getElementById('loading-messageOne').classList.add('hidden');
+                        document.getElementById('loading-messageTwo').classList.add('hidden');
+                    }
+                    hideLoadingSpinner();
+
+                    //document.getElementById('searchButton').addEventListener('click', function () {
+                    //    document.getElementById("info").value = ""
+                    //    const exchangeRadioButtons = document.getElementsByName('exchange');
+                    //    document.getElementById("errorInfo").textContent = "";
+                    //    let selectedExchangeValue = '';
+                    //
+                    //    for (let i = 0; i < exchangeRadioButtons.length; i++) {
+                    //        if (exchangeRadioButtons[i].checked) {
+                    //            selectedExchangeValue = exchangeRadioButtons[i].value;
+                    //        }
+                    //    }
+                    //    if (selectedExchangeValue == "cse") {
+                    //        const sectorSearch = `/volumeCse`;
+                    //        showLoadingSpinner();
+                    //        fetch(sectorSearch)
+                    //            .then(response => response.json())
+                    //            .then(data => {
+                    //                const keys = data;
+                    //                console.log(keys);
+                    //                const modifiedKeys = keys.substring(1, keys.length - 1);
+                    //                document.getElementById("info").value = modifiedKeys;
+                    //                hideLoadingSpinner();
+                    //            });
+                    //    }
+                    //    else if (selectedExchangeValue == "tsx") {
+                    //        const sectorSearch = `/volumeTsx`;
+                    //        showLoadingSpinner();
+                    //        fetch(sectorSearch)
+                    //            .then(response => response.json())
+                    //            .then(data => {
+                    //                const keys = data;
+                    //                console.log(keys);
+                    //                const modifiedKeys = keys.substring(1, keys.length - 1);
+                    //                document.getElementById("info").value = modifiedKeys;
+                    //                hideLoadingSpinner();
+                    //            });
+                    //    }
+                    //    else if (selectedExchangeValue == "tsxv") {
+                    //        const sectorSearch = `/volumeTsxv`;
+                    //        showLoadingSpinner();
+                    //        fetch(sectorSearch)
+                    //            .then(response => response.json())
+                    //            .then(data => {
+                    //                const keys = data;
+                    //                console.log(keys);
+                    //                const modifiedKeys = keys.substring(1, keys.length - 1);
+                    //                document.getElementById("info").value = modifiedKeys;
+                    //                hideLoadingSpinner();
+                    //            });
+                    //    }
+                    //});
+                </script>
+            </div>
+        </div>
+        <a href="{{ url_for('volumeUSAHomepage') }}" class="bg-gray-800 text-white px-4 py-2 rounded-md">
+            Go to USA Searcher
+        </a>
+    </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white text-center py-2 mt-auto">
+        <p>Created By Armando Mancino. 2023.</p>
+    </footer>
+</body>
+
+</html>
